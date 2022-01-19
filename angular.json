@@ -1,0 +1,42 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "cli": {
+    "analytics": "d7348a1a-ffca-4028-9112-ca3d812ab642"
+  },
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "nodeboot-oauth2-starter": {
+      "projectType": "library",
+      "root": "projects/nodeboot-oauth2-starter",
+      "sourceRoot": "projects/nodeboot-oauth2-starter/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/nodeboot-oauth2-starter/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/nodeboot-oauth2-starter/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/nodeboot-oauth2-starter/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/nodeboot-oauth2-starter/src/test.ts",
+            "tsConfig": "projects/nodeboot-oauth2-starter/tsconfig.spec.json",
+            "karmaConfig": "projects/nodeboot-oauth2-starter/karma.conf.js"
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "nodeboot-oauth2-starter"
+}

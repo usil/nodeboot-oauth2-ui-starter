@@ -1,0 +1,15 @@
+{
+  "name": "nodeboot-oauth2-starter",
+  "version": "1.0.0",
+  "peerDependencies": {
+    "@angular/material": "^13.0.0",
+    "@angular/animations": "~13.0.0",
+    "@angular/cdk": "^13.0.0",
+    "@angular/common": "^13.1.0",
+    "@angular/core": "^13.1.0",
+    "ngx-clipboard": "^15.0.1"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  }
+}

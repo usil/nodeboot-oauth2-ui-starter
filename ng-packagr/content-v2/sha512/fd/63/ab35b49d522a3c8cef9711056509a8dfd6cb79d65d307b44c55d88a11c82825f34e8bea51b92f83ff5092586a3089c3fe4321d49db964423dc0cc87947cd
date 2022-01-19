@@ -1,0 +1,1 @@
+{"css":".header{display:flex;align-items:baseline;gap:.5rem;flex-wrap:wrap}.header h1{margin:0;font-size:32px}.header h4{margin:0;color:gray}section{display:grid}section .roles-list{color:#000}section .actions{margin-top:2rem}.profile-container ::ng-deep .mat-list-base .mat-list-item .mat-list-item-content{color:#000}\n","warnings":[]}
