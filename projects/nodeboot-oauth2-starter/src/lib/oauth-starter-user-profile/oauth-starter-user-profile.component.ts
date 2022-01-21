@@ -5,7 +5,7 @@ import {
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
-// import { ChangePasswordComponent } from './change-password/change-password.component';
+import { ChangePasswordComponent } from './change-password/change-password.component';
 
 @Component({
   selector: 'lib-oauth-starter-user-profile',
@@ -28,11 +28,11 @@ export class OauthStarterUserProfileComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  // openChangePasswordDialog() {
-  //   this.dialog.open(ChangePasswordComponent, {
-  //     width: '600px',
-  //     maxHeight: '70vh',
-  //     data: this.user,
-  //   });
-  // }
+  openChangePasswordDialog() {
+    this.dialog.open(ChangePasswordComponent, {
+      width: '600px',
+      maxHeight: '70vh',
+      data: this.user,
+    });
+  }
 }

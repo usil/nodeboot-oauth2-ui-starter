@@ -25,6 +25,7 @@
           <h3>{{ option.allowed }}</h3>
         </div>
         <button
+          [disabled]="isBasicOption(option.allowed)"
           (click)="removeFromOptionList(option)"
           color="warn"
           type="button"

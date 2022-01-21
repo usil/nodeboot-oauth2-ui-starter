@@ -44,14 +44,14 @@ export class CreateClientComponent implements OnInit {
           Validators.required,
           Validators.minLength(4),
           Validators.maxLength(45),
-          Validators.pattern(/^[a-zA-Z0-9.\s]+$/),
+          Validators.pattern(/^[a-zA-Z0-9_\.\-\/\s]+$/),
         ])
       ),
       identifier: this.formBuilder.control(
         '',
         Validators.compose([
           Validators.required,
-          Validators.pattern(/^[a-zA-Z0-9]+$/),
+          Validators.pattern(/^[a-zA-Z0-9_\.\-\/]+$/),
           Validators.minLength(4),
           Validators.maxLength(20),
         ])

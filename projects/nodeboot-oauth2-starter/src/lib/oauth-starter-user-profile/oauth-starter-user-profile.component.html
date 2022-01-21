@@ -22,7 +22,12 @@
         </mat-expansion-panel>
       </mat-accordion>
       <div class="actions">
-        <button type="button" mat-flat-button color="accent">
+        <button
+          (click)="openChangePasswordDialog()"
+          type="button"
+          mat-flat-button
+          color="accent"
+        >
           Change Password
         </button>
       </div>

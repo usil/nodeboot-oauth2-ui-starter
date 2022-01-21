@@ -45,7 +45,7 @@ export class CreateApplicationPartComponent implements OnInit {
           Validators.required,
           Validators.minLength(4),
           Validators.maxLength(45),
-          Validators.pattern(/^[a-zA-Z0-9.\s]+$/),
+          Validators.pattern(/^[a-zA-Z0-9_\.\-\/]+$/),
         ])
       ),
       application: this.formBuilder.control(

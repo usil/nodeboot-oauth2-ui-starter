@@ -45,7 +45,7 @@ export class CreateRoleComponent implements OnInit, OnDestroy {
         '',
         Validators.compose([
           Validators.required,
-          Validators.pattern(/^[a-zA-Z0-9]+$/),
+          Validators.pattern(/^[a-zA-Z0-9_\.\-\/]+$/),
           Validators.minLength(4),
           Validators.maxLength(20),
         ])

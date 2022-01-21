@@ -31,7 +31,7 @@ export class ApplicationOptionsComponent implements OnInit {
       name: this.formBuilder.control(
         '',
         Validators.compose([
-          Validators.pattern(/^[a-zA-Z0-9]+$/),
+          Validators.pattern(/^[a-zA-Z0-9_\.\-\/\s]+$/),
           Validators.minLength(1),
           Validators.maxLength(40),
         ])
@@ -40,6 +40,13 @@ export class ApplicationOptionsComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  isBasicOption(allowed: string) {
+    const basicOptions = ['*', 'create', 'select', 'update', 'delete'];
+    const indexOfAllowed = basicOptions.indexOf(allowed);
+    if (indexOfAllowed === -1) return false;
+    return true;
+  }
 
   addOptionToList() {
     const currentNameValue =
