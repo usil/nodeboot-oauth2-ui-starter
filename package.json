@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build nodeboot-oauth2-starter && cd dist",
+    "build": "ng build nodeboot-oauth2-starter && cd dist/nodeboot-oauth2-starter",
     "prepare": "npm run build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
