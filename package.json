@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build nodeboot-oauth2-starter && cd dist/nodeboot-oauth2-starter && npm pack",
     "prepare": "npm run build",
-    "postinstall": "cd node_modules/oauth2",
+    "postinstall": "cd .. && cd oauth2",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
