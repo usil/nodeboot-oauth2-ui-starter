@@ -5,8 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build nodeboot-oauth2-starter",
-    "prepare": "npm run build  && cd dist/nodeboot-oauth2-starter && npm pack",
-    "postinstall": "npm install ./node_modules/oauth2/dist/nodeboot-oauth2-starter/nodeboot-oauth2-starter-1.0.7.tgz",
+    "prepare": "npm run build  && cd dist/nodeboot-oauth2-starter && npm pack && npm install nodeboot-oauth2-starter-1.0.7.tgz",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
