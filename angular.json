@@ -6,7 +6,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "nodeboot-oauth2-starter": {
+    "nodeboot-oauth2-starter-ui": {
       "projectType": "library",
       "root": "projects/nodeboot-oauth2-starter",
       "sourceRoot": "projects/nodeboot-oauth2-starter/src",
