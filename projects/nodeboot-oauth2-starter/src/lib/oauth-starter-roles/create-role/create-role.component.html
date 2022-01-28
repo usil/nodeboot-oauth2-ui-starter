@@ -1,0 +1,68 @@
+<h2 mat-dialog-title>Create Role</h2>
+<form
+  [formGroup]="createRoleForm"
+  (ngSubmit)="createRole(createRoleForm.value)"
+>
+  <div mat-dialog-content>
+    <div class="error-display" *ngIf="errorMessage">
+      <h5>{{ errorMessage }}</h5>
+    </div>
+    <mat-form-field class="forms-field" appearance="fill">
+      <mat-label>Identifier</mat-label>
+      <input
+        matInput
+        placeholder="admin01"
+        formControlName="identifier"
+        name="identifier"
+        required
+      />
+      <mat-hint>A role identifier</mat-hint>
+    </mat-form-field>
+    <mat-form-field class="forms-field" appearance="fill">
+      <mat-label>Select a part</mat-label>
+      <mat-select name="part" formControlName="part">
+        <mat-option
+          [value]="option.applicationPartName"
+          *ngFor="let option of options"
+          >{{ option.applicationPartName }}</mat-option
+        >
+      </mat-select>
+      <mat-hint>Select an application part</mat-hint>
+    </mat-form-field>
+    <mat-selection-list #allowed formControlName="selected">
+      <mat-list-option
+        (selectedChange)="selectedChange($event, allowedL)"
+        [value]="allowedL"
+        [disabled]="
+          allowedL.allowed !== '*' &&
+          createRoleForm.get('selected')?.value.length ===
+            allowedShowList.length
+            ? true
+            : false
+        "
+        *ngFor="let allowedL of allowedShowList"
+      >
+        {{ allowedL.allowed }}
+      </mat-list-option>
+    </mat-selection-list>
+  </div>
+  <div align="end" mat-dialog-actions>
+    <button
+      (click)="closeDialog()"
+      type="button"
+      color="warn"
+      mat-stroked-button
+      [disabled]="dialogRef.disableClose"
+    >
+      Cancel</button
+    ><button
+      [disabled]="
+        !createRoleForm.valid || objectKeys(allowedObject).length === 0
+      "
+      color="primary"
+      mat-flat-button
+    >
+      Create
+    </button>
+  </div>
+</form>
