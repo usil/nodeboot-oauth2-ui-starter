@@ -168,13 +168,19 @@ export class NodebootOauth2StarterService {
       .pipe(first());
   }
 
-  createClient(createClientData: {
-    name: string;
-    identifier: string;
-    roles: BasicRole[];
-  }): Observable<ClientCreateResult> {
+  createClient(
+    createClientData: {
+      name: string;
+      identifier: string;
+      roles: BasicRole[];
+    },
+    longLive: boolean
+  ): Observable<ClientCreateResult> {
     return this.http
-      .post<ClientCreateResult>(this.authClientApi, createClientData)
+      .post<ClientCreateResult>(
+        this.authClientApi + `?longLive=${longLive}`,
+        createClientData
+      )
       .pipe(first());
   }
 
@@ -198,9 +204,72 @@ export class NodebootOauth2StarterService {
     return this.http.get<ApplicationResult>(this.authApplicationApi);
   }
 
+  getSecret(clientId: number): Observable<SecretTokenResponse> {
+    return this.http
+      .get<SecretTokenResponse>(this.authClientApi + `/${clientId}/secret`)
+      .pipe(first());
+  }
+
+  generateLongLiveToken(
+    clientId: number,
+    identifier: string
+  ): Observable<LongLiveTokenResponse> {
+    return this.http
+      .put<LongLiveTokenResponse>(
+        this.authClientApi + `/${clientId}/long-live`,
+        {
+          identifier,
+        }
+      )
+      .pipe(first());
+  }
+
+  removeLongLiveToken(
+    clientId: number,
+    identifier: string
+  ): Observable<BasicResponse> {
+    return this.http
+      .put<BasicResponse>(
+        this.authClientApi + `/${clientId}/long-live?remove_long_live=true`,
+        {
+          identifier,
+        }
+      )
+      .pipe(first());
+  }
+
+  modifyRevokeStatus(clientId: number, revoke: boolean) {
+    return this.http
+      .put<BasicResponse>(this.authClientApi + `/${clientId}/revoke`, {
+        revoke,
+      })
+      .pipe(first());
+  }
+
   get apiUrl() {
     return this.configuration.api;
   }
+}
+
+interface BasicResponse {
+  message: string;
+  code: number;
+}
+
+interface SecretTokenResponse {
+  message: string;
+  code: number;
+  content: {
+    clientSecret: string;
+  };
+}
+
+interface LongLiveTokenResponse {
+  message: string;
+  code: number;
+  content: {
+    access_token: string;
+  };
 }
 
 interface ApplicationResult {
@@ -222,7 +291,10 @@ export interface Client {
   id: number;
   subjectId: number;
   name: string;
+  description: string;
   identifier: string;
+  hasLongLiveToken?: boolean;
+  revoked?: boolean;
   roles: Role[];
 }
 
@@ -233,6 +305,8 @@ interface ClientCreateResult {
 }
 
 export interface ClientCreateContent {
+  clientSecret: string;
+  clientId: string;
   access_token: string;
 }
 
@@ -297,6 +371,7 @@ interface PaginationUserContent {
 export interface User {
   id: number;
   subjectId: number;
+  description: string;
   name: string;
   username: string;
   roles: RoleUser[];

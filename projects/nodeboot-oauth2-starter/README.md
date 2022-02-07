@@ -1,24 +1,112 @@
-# NodebootOauth2Starter
+# Nodeboot Oauth2 Starter UI
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.1.0.
+This library propose is to make the implementation of the [nodeboot-oauth2-starter](https://github.com/usil/nodeboot-oauth2-starter/wiki) library easier giving you the required ui component. You can use this library in any Angular 13 project.
 
-## Code scaffolding
+## Requirements
 
-Run `ng generate component component-name --project nodeboot-oauth2-starter` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project nodeboot-oauth2-starter`.
-> Note: Don't forget to add `--project nodeboot-oauth2-starter` or else it will be added to the default project in your `angular.json` file. 
+- Angular 13
+- Angular Material (You need to use angular material in your project)
 
-## Build
+## Setting up the library
 
-Run `ng build nodeboot-oauth2-starter` to build the project. The build artifacts will be stored in the `dist/` directory.
+### Install it
 
-## Publishing
+```cmd
+npm install https://github.com/usil/nodeboot-oauth2-ui-starter-dist.git
+```
 
-After building your library with `ng build nodeboot-oauth2-starter`, go to the dist folder `cd dist/nodeboot-oauth2-starter` and run `npm publish`.
+### Setting the api url variable
 
-## Running unit tests
+In your `app.module.ts`:
 
-Run `ng test nodeboot-oauth2-starter` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```typescript
+...
+import { environment } from 'src/environments/environment';
+...
 
-## Further help
+@NgModule({
+  ...
+  providers: [
+    ...
+    { provide: 'configuration', useFactory: AppModule.getEnv },
+    ...
+  ],
+  ...
+})
+export class AppModule {
+  static getEnv() {
+    return { api: environment.api };
+  }
+}
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Where `environment.api` is where the url to the api where `oauth2-starter` is used.
+
+### Making the http interceptor
+
+Create an [http interceptor](https://angular.io/api/common/http/HttpInterceptor), you can use the angular cli `ng g interceptor mainInterceptor`. Set it up so you can send an `Authorization` header with `BEARER YOUR_TOKEN`
+
+```typescript
+const secureRequest = request.clone({
+  setHeaders: {
+    Authorization: `BEARER ${myToken}`,
+  },
+});
+
+return next.handle(secureRequest);
+```
+
+### Using the components
+
+In the module that you want to use import the library:
+
+```typescript
+...
+import { NodebootOauth2StarterModule } from 'nodeboot-oauth2-starter-ui';
+...
+
+@NgModule({
+  ...
+  imports: [
+    ...
+    NodebootOauth2StarterModule,
+    ...
+  ],
+  ...
+})
+export class SomeModule {}
+```
+
+Then for the users management interface
+
+```html
+<lib-oauth-starter-users></lib-oauth-starter-users>
+```
+
+For the clients management interface
+
+```html
+<lib-oauth-starter-client></lib-oauth-starter-client>
+```
+
+For the roles management interface
+
+```html
+<lib-oauth-starter-roles></lib-oauth-starter-roles>
+```
+
+For the user profile interface
+
+```html
+<lib-oauth-starter-user-profile></lib-oauth-starter-user-profile>
+```
+
+For the application part management interface
+
+```html
+<lib-oauth-starter-application-part></lib-oauth-starter-application-part>
+```
+
+## Road map
+
+- Add support for older angular version

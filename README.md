@@ -1,27 +1,112 @@
-# Oauth2
+# Nodeboot Oauth2 Starter UI
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.1.2.
+This library propose is to make the implementation of the [nodeboot-oauth2-starter](https://github.com/usil/nodeboot-oauth2-starter/wiki) library easier giving you the required ui component. You can use this library in any Angular 13 project.
 
-## Development server
+## Requirements
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+- Angular 13
+- Angular Material (You need to use angular material in your project)
 
-## Code scaffolding
+## Setting up the library
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### Install it
 
-## Build
+```cmd
+npm install https://github.com/usil/nodeboot-oauth2-ui-starter-dist.git
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### Setting the api url variable
 
-## Running unit tests
+In your `app.module.ts`:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```typescript
+...
+import { environment } from 'src/environments/environment';
+...
 
-## Running end-to-end tests
+@NgModule({
+  ...
+  providers: [
+    ...
+    { provide: 'configuration', useFactory: AppModule.getEnv },
+    ...
+  ],
+  ...
+})
+export class AppModule {
+  static getEnv() {
+    return { api: environment.api };
+  }
+}
+```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+Where `environment.api` is where the url to the api where `oauth2-starter` is used.
 
-## Further help
+### Making the http interceptor
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Create an [http interceptor](https://angular.io/api/common/http/HttpInterceptor), you can use the angular cli `ng g interceptor mainInterceptor`. Set it up so you can send an `Authorization` header with `BEARER YOUR_TOKEN`
+
+```typescript
+const secureRequest = request.clone({
+  setHeaders: {
+    Authorization: `BEARER ${myToken}`,
+  },
+});
+
+return next.handle(secureRequest);
+```
+
+### Using the components
+
+In the module that you want to use import the library:
+
+```typescript
+...
+import { NodebootOauth2StarterModule } from 'nodeboot-oauth2-starter-ui';
+...
+
+@NgModule({
+  ...
+  imports: [
+    ...
+    NodebootOauth2StarterModule,
+    ...
+  ],
+  ...
+})
+export class SomeModule {}
+```
+
+Then for the users management interface
+
+```html
+<lib-oauth-starter-users></lib-oauth-starter-users>
+```
+
+For the clients management interface
+
+```html
+<lib-oauth-starter-client></lib-oauth-starter-client>
+```
+
+For the roles management interface
+
+```html
+<lib-oauth-starter-roles></lib-oauth-starter-roles>
+```
+
+For the user profile interface
+
+```html
+<lib-oauth-starter-user-profile></lib-oauth-starter-user-profile>
+```
+
+For the application part management interface
+
+```html
+<lib-oauth-starter-application-part></lib-oauth-starter-application-part>
+```
+
+## Road map
+
+- Add support for older angular version

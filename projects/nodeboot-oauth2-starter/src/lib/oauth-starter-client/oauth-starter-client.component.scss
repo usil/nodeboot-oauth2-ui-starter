@@ -16,9 +16,10 @@
 
   table {
     width: 100%;
+    overflow-x: auto;
     th,
     td {
-      width: 20%;
+      min-width: 80px;
     }
     .roles-column {
       button:last-child {
@@ -27,7 +28,7 @@
     }
     .actions-column {
       text-align: end;
-      button:last-child {
+      button {
         margin-left: 0.5rem;
       }
     }
@@ -49,4 +50,19 @@
     align-items: center;
     justify-content: center;
   }
+}
+
+.loading-full {
+  pointer-events: all;
+  z-index: 99999;
+  border: none;
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  cursor: wait;
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.6);
 }

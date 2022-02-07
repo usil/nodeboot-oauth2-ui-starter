@@ -28,6 +28,9 @@ import { DeleteApplicationPartComponent } from './oauth-starter-application-part
 import { ApplicationOptionsComponent } from './oauth-starter-application-part/application-options/application-options.component';
 import { CreateApplicationPartComponent } from './oauth-starter-application-part/create-application-part/create-application-part.component';
 import { ChangePasswordComponent } from './oauth-starter-user-profile/change-password/change-password.component';
+import { ShowNewTokenComponent } from './oauth-starter-client/show-new-token/show-new-token.component';
+import { ShowSecretComponent } from './oauth-starter-client/show-secret/show-secret.component';
+import { RevokeTokenComponent } from './oauth-starter-client/revoke-token/revoke-token.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +58,9 @@ import { ChangePasswordComponent } from './oauth-starter-user-profile/change-pas
     DeleteApplicationPartComponent,
     ApplicationOptionsComponent,
     CreateApplicationPartComponent,
+    ShowNewTokenComponent,
+    ShowSecretComponent,
+    RevokeTokenComponent,
   ],
   imports: [
     LibraryMaterials,
