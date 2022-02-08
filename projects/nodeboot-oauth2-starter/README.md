@@ -77,35 +77,57 @@ import { NodebootOauth2StarterModule } from 'nodeboot-oauth2-starter-ui';
 export class SomeModule {}
 ```
 
-Then for the users management interface
+### The users management interface
 
 ```html
 <lib-oauth-starter-users></lib-oauth-starter-users>
 ```
 
-For the clients management interface
+Here you will see a table with all of the users. You can create, update and delete an user. Also view and update his roles.
+
+![users interface](https://i.ibb.co/HtvNYFB/user.jpg)
+
+### The clients management interface
 
 ```html
 <lib-oauth-starter-client></lib-oauth-starter-client>
 ```
 
-For the roles management interface
+Here you will see a table with all of the client. You can create, update and delete an user. Also view and update his roles.
+
+The admin can view the secret key and generate a long live token. Also revoke the client access.
+
+![users interface](https://i.ibb.co/w7krs9H/clients.png)
+
+### The roles management interface
 
 ```html
 <lib-oauth-starter-roles></lib-oauth-starter-roles>
 ```
 
-For the user profile interface
+View all of the existing roles and their respective security options.
+
+![roles interface](https://i.ibb.co/CMsDKTC/ROLES.png)
+
+### The user profile interface
 
 ```html
 <lib-oauth-starter-user-profile></lib-oauth-starter-user-profile>
 ```
 
-For the application part management interface
+The current user profile. You can change the password.
+
+![roles interface](https://i.ibb.co/gRgbckF/profile.png)
+
+### The application part management interface
 
 ```html
 <lib-oauth-starter-application-part></lib-oauth-starter-application-part>
 ```
+
+The resources of an application and their respective options.
+
+![roles interface](https://i.ibb.co/72SwWt9/applicationparts.jpg)
 
 ## Road map
 
