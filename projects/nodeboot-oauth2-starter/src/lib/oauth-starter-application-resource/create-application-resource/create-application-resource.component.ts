@@ -1,18 +1,18 @@
 import {
   Application,
   NodebootOauth2StarterService,
-} from './../../nodeboot-oauth2-starter.service';
+} from '../../nodeboot-oauth2-starter.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector: 'lib-create-application-part',
-  templateUrl: './create-application-part.component.html',
-  styleUrls: ['./create-application-part.component.scss'],
+  selector: 'lib-create-application-resource',
+  templateUrl: './create-application-resource.component.html',
+  styleUrls: ['./create-application-resource.component.scss'],
 })
-export class CreateApplicationPartComponent implements OnInit {
-  createPartForm: FormGroup;
+export class CreateApplicationResourceComponent implements OnInit {
+  createResourceForm: FormGroup;
   errorMessage!: string;
   errorMessageRoles!: string;
   applications: Application[] = [];
@@ -21,7 +21,7 @@ export class CreateApplicationPartComponent implements OnInit {
   loadingResult = false;
 
   constructor(
-    public dialogRef: MatDialogRef<CreateApplicationPartComponent>,
+    public dialogRef: MatDialogRef<CreateApplicationResourceComponent>,
     private formBuilder: FormBuilder,
     private nbService: NodebootOauth2StarterService
   ) {
@@ -38,8 +38,8 @@ export class CreateApplicationPartComponent implements OnInit {
         this.applications = res.content || [];
       },
     });
-    this.createPartForm = this.formBuilder.group({
-      partIdentifier: this.formBuilder.control(
+    this.createResourceForm = this.formBuilder.group({
+      resourceIdentifier: this.formBuilder.control(
         '',
         Validators.compose([
           Validators.required,
@@ -57,10 +57,16 @@ export class CreateApplicationPartComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  createPart(createPartForm: { partIdentifier: string; application: number }) {
+  createResource(createResourceForm: {
+    resourceIdentifier: string;
+    application: number;
+  }) {
     this.loadingResult = true;
     this.nbService
-      .createPart(createPartForm.partIdentifier, createPartForm.application)
+      .createResource(
+        createResourceForm.resourceIdentifier,
+        createResourceForm.application
+      )
       .subscribe({
         error: (err) => {
           this.dialogRef.disableClose = false;

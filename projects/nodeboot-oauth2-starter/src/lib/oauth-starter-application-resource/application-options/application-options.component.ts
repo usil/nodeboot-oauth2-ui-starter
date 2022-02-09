@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
   NodebootOauth2StarterService,
-  Part,
+  Resource,
   Option,
 } from '../../nodeboot-oauth2-starter.service';
 
@@ -13,7 +13,7 @@ import {
   styleUrls: ['./application-options.component.scss'],
 })
 export class ApplicationOptionsComponent implements OnInit {
-  addPartOptionForm: FormGroup;
+  addResourceOptionForm: FormGroup;
   errorMessage!: string;
   errorMessageRoles!: string;
   options: Option[] = [];
@@ -24,10 +24,10 @@ export class ApplicationOptionsComponent implements OnInit {
     public dialogRef: MatDialogRef<ApplicationOptionsComponent>,
     private formBuilder: FormBuilder,
     private nbService: NodebootOauth2StarterService,
-    @Inject(MAT_DIALOG_DATA) public part: Part
+    @Inject(MAT_DIALOG_DATA) public resource: Resource
   ) {
-    this.optionsList = [...part.allowed];
-    this.addPartOptionForm = this.formBuilder.group({
+    this.optionsList = [...resource.allowed];
+    this.addResourceOptionForm = this.formBuilder.group({
       name: this.formBuilder.control(
         '',
         Validators.compose([
@@ -50,18 +50,21 @@ export class ApplicationOptionsComponent implements OnInit {
 
   addOptionToList() {
     const currentNameValue =
-      (this.addPartOptionForm.get('name')?.value as string) || '';
+      (this.addResourceOptionForm.get('name')?.value as string) || '';
     if (currentNameValue === '') return;
     const indexOfCurrent = this.optionsList.findIndex(
       (option) =>
         option.allowed.toLowerCase() === currentNameValue.toLowerCase()
     );
-    if (indexOfCurrent === -1 && this.addPartOptionForm.get('name')?.valid) {
+    if (
+      indexOfCurrent === -1 &&
+      this.addResourceOptionForm.get('name')?.valid
+    ) {
       this.optionsList.push({
         id: 0,
-        allowed: this.addPartOptionForm.get('name')?.value,
+        allowed: this.addResourceOptionForm.get('name')?.value,
       });
-      this.addPartOptionForm.get('name')?.reset();
+      this.addResourceOptionForm.get('name')?.reset();
     }
   }
 
@@ -77,9 +80,13 @@ export class ApplicationOptionsComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  updatePartOptions() {
+  updateResourceOptions() {
     this.nbService
-      .updatePartOptions(this.part.id, this.optionsList, this.part.allowed)
+      .updateResourceOptions(
+        this.resource.id,
+        this.optionsList,
+        this.resource.allowed
+      )
       .subscribe({
         error: (err) => {
           this.dialogRef.disableClose = false;

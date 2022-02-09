@@ -6,13 +6,15 @@
         <mat-expansion-panel-header>
           <mat-panel-title> {{ role.identifier }} </mat-panel-title>
         </mat-expansion-panel-header>
-        <h4>Grouped by application part</h4>
+        <h4>Grouped by application resource</h4>
         <mat-list>
-          <div *ngFor="let option of role.parts">
-            <div mat-subheader>{{ option.applicationPartName }}</div>
+          <div *ngFor="let option of role.resources">
+            <div mat-subheader>{{ option.applicationResourceName }}</div>
             <mat-list-item *ngFor="let allowed of option.allowed">
               <mat-icon mat-list-icon>vpn_key</mat-icon>
-              <div mat-line>{{ option.applicationPartName }}:{{ allowed }}</div>
+              <div mat-line>
+                {{ option.applicationResourceName }}:{{ allowed }}
+              </div>
             </mat-list-item>
             <mat-divider></mat-divider>
           </div>

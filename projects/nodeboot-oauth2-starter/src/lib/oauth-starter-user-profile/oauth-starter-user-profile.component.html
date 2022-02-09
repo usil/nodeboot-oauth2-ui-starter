@@ -14,9 +14,11 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
           <mat-list role="list">
-            <mat-list-item *ngFor="let part of role.parts" role="listitem"
-              >{{ part.applicationPartName }} | Options:
-              {{ part.allowed.join(",") }}</mat-list-item
+            <mat-list-item
+              *ngFor="let resource of role.resources"
+              role="listitem"
+              >{{ resource.applicationResourceName }} | Options:
+              {{ resource.allowed.join(",") }}</mat-list-item
             >
           </mat-list>
         </mat-expansion-panel>

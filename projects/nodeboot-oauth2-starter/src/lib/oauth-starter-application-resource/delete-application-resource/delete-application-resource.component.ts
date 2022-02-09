@@ -2,22 +2,22 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
   NodebootOauth2StarterService,
-  Part,
+  Resource,
 } from '../../nodeboot-oauth2-starter.service';
 
 @Component({
-  selector: 'lib-delete-application-part',
-  templateUrl: './delete-application-part.component.html',
-  styleUrls: ['./delete-application-part.component.scss'],
+  selector: 'lib-delete-application-resource',
+  templateUrl: './delete-application-resource.component.html',
+  styleUrls: ['./delete-application-resource.component.scss'],
 })
-export class DeleteApplicationPartComponent implements OnInit {
+export class DeleteApplicationResourceComponent implements OnInit {
   errorMessage!: string;
   loadingResult = false;
 
   constructor(
-    public dialogRef: MatDialogRef<DeleteApplicationPartComponent>,
+    public dialogRef: MatDialogRef<DeleteApplicationResourceComponent>,
     private nbService: NodebootOauth2StarterService,
-    @Inject(MAT_DIALOG_DATA) public part: Part
+    @Inject(MAT_DIALOG_DATA) public resource: Resource
   ) {}
 
   ngOnInit(): void {}
@@ -25,7 +25,7 @@ export class DeleteApplicationPartComponent implements OnInit {
   delete() {
     this.loadingResult = true;
     this.dialogRef.disableClose = true;
-    this.nbService.deletePart(this.part.id).subscribe({
+    this.nbService.deleteResource(this.resource.id).subscribe({
       error: (err) => {
         this.dialogRef.disableClose = false;
         if (err.error) {

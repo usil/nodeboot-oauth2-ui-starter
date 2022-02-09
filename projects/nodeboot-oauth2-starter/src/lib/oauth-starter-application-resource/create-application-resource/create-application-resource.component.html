@@ -1,7 +1,7 @@
-<h2 mat-dialog-title>Create Application Part</h2>
+<h2 mat-dialog-title>Create Application Resource</h2>
 <form
-  [formGroup]="createPartForm"
-  (ngSubmit)="createPart(createPartForm.value)"
+  [formGroup]="createResourceForm"
+  (ngSubmit)="createResource(createResourceForm.value)"
 >
   <div mat-dialog-content>
     <div class="error-display" *ngIf="errorMessage">
@@ -11,11 +11,11 @@
       <mat-label>Identifier</mat-label>
       <input
         matInput
-        formControlName="partIdentifier"
-        name="partIdentifier"
+        formControlName="resourceIdentifier"
+        name="resourceIdentifier"
         required
       />
-      <mat-hint>The part name</mat-hint>
+      <mat-hint>The resource name</mat-hint>
     </mat-form-field>
     <mat-form-field class="forms-field" appearance="fill">
       <mat-label>Select A Application</mat-label>
@@ -39,7 +39,7 @@
     >
       Cancel</button
     ><button
-      [disabled]="!createPartForm.valid || loadingResult"
+      [disabled]="!createResourceForm.valid || loadingResult"
       color="primary"
       mat-flat-button
     >

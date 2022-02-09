@@ -1,5 +1,5 @@
-<h2 mat-dialog-title>Part options</h2>
-<form [formGroup]="addPartOptionForm" (ngSubmit)="updatePartOptions()">
+<h2 mat-dialog-title>Resource options</h2>
+<form [formGroup]="addResourceOptionForm" (ngSubmit)="updateResourceOptions()">
   <div mat-dialog-content>
     <div class="error-display" *ngIf="errorMessage">
       <h5>{{ errorMessage }}</h5>
@@ -8,10 +8,10 @@
       <mat-form-field class="forms-field" appearance="fill">
         <mat-label>New Option</mat-label>
         <input matInput formControlName="name" name="name" />
-        <mat-hint>Part option</mat-hint>
+        <mat-hint>Resource option</mat-hint>
       </mat-form-field>
       <button
-        [disabled]="!addPartOptionForm.valid"
+        [disabled]="!addResourceOptionForm.valid"
         type="button"
         (click)="addOptionToList()"
         mat-stroked-button
@@ -47,7 +47,7 @@
     >
       Cancel</button
     ><button
-      [disabled]="!addPartOptionForm.valid || optionsList.length === 0"
+      [disabled]="!addResourceOptionForm.valid || optionsList.length === 0"
       color="primary"
       mat-flat-button
     >

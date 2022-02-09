@@ -119,10 +119,10 @@ The current user profile. You can change the password.
 
 ![roles interface](https://i.ibb.co/gRgbckF/profile.png)
 
-### The application part management interface
+### The application resource management interface
 
 ```html
-<lib-oauth-starter-application-part></lib-oauth-starter-application-part>
+<lib-oauth-starter-application-resource></lib-oauth-starter-application-resource>
 ```
 
 The resources of an application and their respective options.

@@ -20,29 +20,29 @@ import {
   map,
   first,
 } from 'rxjs';
-import { Part } from '../nodeboot-oauth2-starter.service';
+import { Resource } from '../nodeboot-oauth2-starter.service';
 import { ApplicationOptionsComponent } from './application-options/application-options.component';
-import { CreateApplicationPartComponent } from './create-application-part/create-application-part.component';
-import { DeleteApplicationPartComponent } from './delete-application-part/delete-application-part.component';
+import { CreateApplicationResourceComponent } from './create-application-resource/create-application-resource.component';
+import { DeleteApplicationResourceComponent } from './delete-application-resource/delete-application-resource.component';
 
 @Component({
-  selector: 'lib-oauth-starter-application-part',
-  templateUrl: './oauth-starter-application-part.component.html',
-  styleUrls: ['./oauth-starter-application-part.component.scss'],
+  selector: 'lib-oauth-starter-application-resource',
+  templateUrl: './oauth-starter-application-resource.component.html',
+  styleUrls: ['./oauth-starter-application-resource.component.scss'],
 })
-export class OauthStarterApplicationPartComponent
+export class OauthStarterApplicationResourceComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
-  parts!: Part[];
+  resources!: Resource[];
   errorMessage!: string | undefined;
   displayedColumns: string[] = [
     'id',
-    'applicationPartName',
+    'applicationResourceName',
     'options',
     'delete',
   ];
 
-  masterParts = [
+  masterResources = [
     'OAUTH2_global',
     'OAUTH2_user',
     'OAUTH2_client',
@@ -83,7 +83,7 @@ export class OauthStarterApplicationPartComponent
         switchMap(() => {
           this.errorMessage = undefined;
           this.isLoadingResults = true;
-          return this.nbService!.getParts(
+          return this.nbService!.getResources(
             this.paginator.pageIndex,
             this.sort.direction
           ).pipe(
@@ -107,22 +107,22 @@ export class OauthStarterApplicationPartComponent
         })
       )
       .subscribe((data) => {
-        this.parts = data;
+        this.resources = data;
       });
   }
 
   ngOnInit(): void {}
 
-  openCreateAppPartDialog() {
-    const createPartOptionsDialogRef = this.dialog.open(
-      CreateApplicationPartComponent,
+  openCreateAppResourceDialog() {
+    const createResourceOptionsDialogRef = this.dialog.open(
+      CreateApplicationResourceComponent,
       {
         width: '600px',
         maxHeight: '70vh',
       }
     );
 
-    createPartOptionsDialogRef
+    createResourceOptionsDialogRef
       .afterClosed()
       .pipe(first())
       .subscribe({
@@ -134,17 +134,17 @@ export class OauthStarterApplicationPartComponent
       });
   }
 
-  openDeletePartDialog(part: Part) {
-    const deletePartOptionsDialogRef = this.dialog.open(
-      DeleteApplicationPartComponent,
+  openDeleteResourceDialog(resource: Resource) {
+    const deleteResourceOptionsDialogRef = this.dialog.open(
+      DeleteApplicationResourceComponent,
       {
         width: '600px',
         maxHeight: '70vh',
-        data: part,
+        data: resource,
       }
     );
 
-    deletePartOptionsDialogRef
+    deleteResourceOptionsDialogRef
       .afterClosed()
       .pipe(first())
       .subscribe({
@@ -156,17 +156,17 @@ export class OauthStarterApplicationPartComponent
       });
   }
 
-  openOptionsDialog(part: Part) {
-    const updatePartOptionsDialogRef = this.dialog.open(
+  openOptionsDialog(resource: Resource) {
+    const updateResourceOptionsDialogRef = this.dialog.open(
       ApplicationOptionsComponent,
       {
         width: '600px',
         maxHeight: '70vh',
-        data: part,
+        data: resource,
       }
     );
 
-    updatePartOptionsDialogRef
+    updateResourceOptionsDialogRef
       .afterClosed()
       .pipe(first())
       .subscribe({

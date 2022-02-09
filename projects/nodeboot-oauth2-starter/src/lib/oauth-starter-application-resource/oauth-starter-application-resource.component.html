@@ -1,9 +1,13 @@
 <div class="role-container">
   <div class="role-head">
-    <h1 class="role-title">Applications Parts</h1>
+    <h1 class="role-title">Applications Resources</h1>
     <span class="separator"></span>
-    <button (click)="openCreateAppPartDialog()" color="accent" mat-flat-button>
-      Add Part
+    <button
+      (click)="openCreateAppResourceDialog()"
+      color="accent"
+      mat-flat-button
+    >
+      Add Resource
     </button>
   </div>
   <div class="role-body">
@@ -14,7 +18,7 @@
       <div class="example-table-container">
         <table
           mat-table
-          [dataSource]="parts"
+          [dataSource]="resources"
           class="user-table"
           matSort
           matSortActive="id"
@@ -26,18 +30,20 @@
             <td mat-cell *matCellDef="let row">{{ row.id }}</td>
           </ng-container>
 
-          <ng-container matColumnDef="applicationPartName">
+          <ng-container matColumnDef="applicationResourceName">
             <th mat-header-cell *matHeaderCellDef>Name</th>
             <td mat-cell *matCellDef="let row">
-              {{ row.applicationPartName }}
+              {{ row.applicationResourceName }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="options">
-            <th mat-header-cell *matHeaderCellDef>Part Options</th>
+            <th mat-header-cell *matHeaderCellDef>Resource Options</th>
             <td class="roles-column" mat-cell *matCellDef="let row">
               <button
-                [disabled]="masterParts.indexOf(row.applicationPartName) !== -1"
+                [disabled]="
+                  masterResources.indexOf(row.applicationResourceName) !== -1
+                "
                 (click)="openOptionsDialog(row)"
                 mat-stroked-button
               >
@@ -51,11 +57,13 @@
             <td class="actions-column" mat-cell *matCellDef="let row">
               <button
                 color="warn"
-                [disabled]="masterParts.indexOf(row.applicationPartName) !== -1"
+                [disabled]="
+                  masterResources.indexOf(row.applicationResourceName) !== -1
+                "
                 mat-stroked-button
-                (click)="openDeletePartDialog(row)"
+                (click)="openDeleteResourceDialog(row)"
               >
-                Delete Part
+                Delete Resource
               </button>
             </td>
           </ng-container>
