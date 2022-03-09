@@ -11,7 +11,7 @@ export class NodebootOauth2StarterService {
   };
   authUserApi: string;
   authRoleApi: string;
-  authPartApi: string;
+  authResourceApi: string;
   authClientApi: string;
   authApplicationApi: string;
 
@@ -25,7 +25,7 @@ export class NodebootOauth2StarterService {
     this.configuration = configuration;
     this.authUserApi = configuration.api + '/auth/user';
     this.authRoleApi = configuration.api + '/auth/role';
-    this.authPartApi = configuration.api + '/auth/part';
+    this.authResourceApi = configuration.api + '/auth/resource';
     this.authClientApi = configuration.api + '/auth/client';
     this.authApplicationApi = configuration.api + '/auth/application ';
   }
@@ -117,41 +117,44 @@ export class NodebootOauth2StarterService {
       .pipe(first());
   }
 
-  getPartsBasic(): Observable<OptionResult> {
+  getResourcesBasic(): Observable<OptionResult> {
     return this.http
-      .get<OptionResult>(this.authPartApi + `?basic=true`)
+      .get<OptionResult>(this.authResourceApi + `?basic=true`)
       .pipe(first());
   }
 
-  getParts(pageIndex: number, order: string): Observable<PartPaginationResult> {
+  getResources(
+    pageIndex: number,
+    order: string
+  ): Observable<ResourcePaginationResult> {
     return this.http
-      .get<PartPaginationResult>(
-        this.authPartApi +
+      .get<ResourcePaginationResult>(
+        this.authResourceApi +
           `?pageIndex=${pageIndex}&&itemsPerPage=20&&order=${order}`
       )
       .pipe(first());
   }
 
-  updatePartOptions(
-    partId: number,
-    newPartOptions: Option[],
-    originalPartOptions: Option[]
+  updateResourceOptions(
+    resourceId: number,
+    newResourceOptions: Option[],
+    originalResourceOptions: Option[]
   ) {
     return this.http
-      .put(this.authPartApi + `/${partId}/option`, {
-        newPartOptions,
-        originalPartOptions,
+      .put(this.authResourceApi + `/${resourceId}/option`, {
+        newResourceOptions,
+        originalResourceOptions,
       })
       .pipe(first());
   }
 
-  deletePart(partId: number) {
-    return this.http.delete(this.authPartApi + `/${partId}`);
+  deleteResource(resourceId: number) {
+    return this.http.delete(this.authResourceApi + `/${resourceId}`);
   }
 
-  createPart(partIdentifier: string, applications_id: number) {
-    return this.http.post(this.authPartApi, {
-      partIdentifier,
+  createResource(resourceIdentifier: string, applications_id: number) {
+    return this.http.post(this.authResourceApi, {
+      resourceIdentifier,
       applications_id,
     });
   }
@@ -168,13 +171,19 @@ export class NodebootOauth2StarterService {
       .pipe(first());
   }
 
-  createClient(createClientData: {
-    name: string;
-    identifier: string;
-    roles: BasicRole[];
-  }): Observable<ClientCreateResult> {
+  createClient(
+    createClientData: {
+      name: string;
+      identifier: string;
+      roles: BasicRole[];
+    },
+    longLive: boolean
+  ): Observable<ClientCreateResult> {
     return this.http
-      .post<ClientCreateResult>(this.authClientApi, createClientData)
+      .post<ClientCreateResult>(
+        this.authClientApi + `?longLive=${longLive}`,
+        createClientData
+      )
       .pipe(first());
   }
 
@@ -198,9 +207,72 @@ export class NodebootOauth2StarterService {
     return this.http.get<ApplicationResult>(this.authApplicationApi);
   }
 
+  getSecret(clientId: number): Observable<SecretTokenResponse> {
+    return this.http
+      .get<SecretTokenResponse>(this.authClientApi + `/${clientId}/secret`)
+      .pipe(first());
+  }
+
+  generateLongLiveToken(
+    clientId: number,
+    identifier: string
+  ): Observable<LongLiveTokenResponse> {
+    return this.http
+      .put<LongLiveTokenResponse>(
+        this.authClientApi + `/${clientId}/long-live`,
+        {
+          identifier,
+        }
+      )
+      .pipe(first());
+  }
+
+  removeLongLiveToken(
+    clientId: number,
+    identifier: string
+  ): Observable<BasicResponse> {
+    return this.http
+      .put<BasicResponse>(
+        this.authClientApi + `/${clientId}/long-live?remove_long_live=true`,
+        {
+          identifier,
+        }
+      )
+      .pipe(first());
+  }
+
+  modifyRevokeStatus(clientId: number, revoke: boolean) {
+    return this.http
+      .put<BasicResponse>(this.authClientApi + `/${clientId}/revoke`, {
+        revoke,
+      })
+      .pipe(first());
+  }
+
   get apiUrl() {
     return this.configuration.api;
   }
+}
+
+interface BasicResponse {
+  message: string;
+  code: number;
+}
+
+interface SecretTokenResponse {
+  message: string;
+  code: number;
+  content: {
+    clientSecret: string;
+  };
+}
+
+interface LongLiveTokenResponse {
+  message: string;
+  code: number;
+  content: {
+    access_token: string;
+  };
 }
 
 interface ApplicationResult {
@@ -222,7 +294,10 @@ export interface Client {
   id: number;
   subjectId: number;
   name: string;
+  description: string;
   identifier: string;
+  hasLongLiveToken?: boolean;
+  revoked?: boolean;
   roles: Role[];
 }
 
@@ -233,6 +308,8 @@ interface ClientCreateResult {
 }
 
 export interface ClientCreateContent {
+  clientSecret: string;
+  clientId: string;
   access_token: string;
 }
 
@@ -253,17 +330,17 @@ interface ClientPaginationContent {
 interface OptionResult {
   message: string;
   code: number;
-  content?: Part[];
+  content?: Resource[];
 }
 
-interface PartPaginationResult {
+interface ResourcePaginationResult {
   message: string;
   code: number;
-  content?: PartPaginationContent;
+  content?: ResourcePaginationContent;
 }
 
-interface PartPaginationContent {
-  items: Part[];
+interface ResourcePaginationContent {
+  items: Resource[];
   pageIndex: number;
   itemsPerPage: number;
   totalItems: number;
@@ -297,6 +374,7 @@ interface PaginationUserContent {
 export interface User {
   id: number;
   subjectId: number;
+  description: string;
   name: string;
   username: string;
   roles: RoleUser[];
@@ -305,12 +383,12 @@ export interface User {
 export interface RoleUser {
   id: number;
   identifier: string;
-  parts: BasicPart[];
+  resources: BasicResource[];
 }
 
-export interface BasicPart {
+export interface BasicResource {
   id: number;
-  applicationPartName: string;
+  applicationResourceName: string;
   allowed: string[];
 }
 
@@ -336,12 +414,12 @@ interface RolePaginationContent {
 export interface Role {
   id: number;
   identifier: string;
-  parts: Part[];
+  resources: Resource[];
 }
 
-export interface Part {
+export interface Resource {
   id: number;
-  applicationPartName: string;
+  applicationResourceName: string;
   allowed: Option[];
 }
 

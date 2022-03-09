@@ -1,3 +1,4 @@
+import { ShowSecretComponent } from './show-secret/show-secret.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -24,6 +25,7 @@ import { DeleteClientComponent } from './delete-client/delete-client.component';
 import { ShowTokenComponent } from './show-token/show-token.component';
 import { UpdateClientComponent } from './update-client/update-client.component';
 import { ViewClientRolesComponent } from './view-client-roles/view-client-roles.component';
+import { ShowNewTokenComponent } from './show-new-token/show-new-token.component';
 
 @Component({
   selector: 'lib-oauth-starter-client',
@@ -33,10 +35,19 @@ import { ViewClientRolesComponent } from './view-client-roles/view-client-roles.
 export class OauthStarterClientComponent implements OnInit {
   clients!: Client[];
   errorMessage!: string | undefined;
-  displayedColumns: string[] = ['id', 'name', 'identifier', 'roles', 'edit'];
+  displayedColumns: string[] = [
+    'id',
+    'name',
+    'identifier',
+    'clientSecret',
+    'accessToken',
+    'roles',
+    'edit',
+  ];
 
   resultsLength = 0;
   isLoadingResults = true;
+  wholePageLoading = false;
 
   reload = new BehaviorSubject<number>(0);
 
@@ -95,6 +106,92 @@ export class OauthStarterClientComponent implements OnInit {
   ngOnDestroy(): void {
     this.clientDataSubscription?.unsubscribe();
     this.sort.sortChange.complete();
+  }
+
+  openShowSecretComponent(client: Client) {
+    this.dialog.open(ShowSecretComponent, {
+      width: '600px',
+      maxHeight: '70vh',
+      data: client,
+    });
+  }
+
+  generateNewLongLiveToken(client: Client) {
+    this.nbService
+      .generateLongLiveToken(client.id, client.identifier)
+      .subscribe({
+        error: (err) => {
+          if (err.error) {
+            this.errorMessage = err.error.message;
+          } else {
+            this.errorMessage = 'Unknown Error';
+          }
+        },
+        next: (res) => {
+          this.dialog.open(ShowNewTokenComponent, {
+            width: '600px',
+            maxHeight: '70vh',
+            data: { access_token: res.content.access_token },
+          });
+        },
+      });
+  }
+
+  removeLongLiveToken(client: Client) {
+    this.wholePageLoading = true;
+    this.nbService.removeLongLiveToken(client.id, client.identifier).subscribe({
+      error: (err) => {
+        if (err.error) {
+          this.errorMessage = err.error.message;
+        } else {
+          this.errorMessage = 'Unknown Error';
+        }
+      },
+      next: () => {
+        this.reload.next(this.reload.value + 1);
+      },
+      complete: () => {
+        this.wholePageLoading = false;
+      },
+    });
+  }
+
+  revokeClient(client: Client) {
+    this.wholePageLoading = true;
+    this.nbService.modifyRevokeStatus(client.id, true).subscribe({
+      error: (err) => {
+        if (err.error) {
+          this.errorMessage = err.error.message;
+        } else {
+          this.errorMessage = 'Unknown Error';
+        }
+      },
+      next: () => {
+        this.reload.next(this.reload.value + 1);
+      },
+      complete: () => {
+        this.wholePageLoading = false;
+      },
+    });
+  }
+
+  ratifyClient(client: Client) {
+    this.wholePageLoading = true;
+    this.nbService.modifyRevokeStatus(client.id, false).subscribe({
+      error: (err) => {
+        if (err.error) {
+          this.errorMessage = err.error.message;
+        } else {
+          this.errorMessage = 'Unknown Error';
+        }
+      },
+      next: () => {
+        this.reload.next(this.reload.value + 1);
+      },
+      complete: () => {
+        this.wholePageLoading = false;
+      },
+    });
   }
 
   openCreateClientDialog() {

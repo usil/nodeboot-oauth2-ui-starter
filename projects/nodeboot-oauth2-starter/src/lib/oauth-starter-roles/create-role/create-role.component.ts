@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import {
-  Part,
+  Resource,
   Option,
   NodebootOauth2StarterService,
 } from '../../nodeboot-oauth2-starter.service';
@@ -16,18 +16,18 @@ import {
 export class CreateRoleComponent implements OnInit, OnDestroy {
   createRoleForm: FormGroup;
   errorMessage!: string;
-  options: Part[] = [];
+  options: Resource[] = [];
   allowedShowList: Option[] = [];
   allowedObject: Record<string, Option[]> = {};
   objectKeys = Object.keys;
-  partSubscription: Subscription;
+  resourceSubscription: Subscription;
 
   constructor(
     private formBuilder: FormBuilder,
     private nbService: NodebootOauth2StarterService,
     public dialogRef: MatDialogRef<CreateRoleComponent>
   ) {
-    this.nbService.getPartsBasic().subscribe({
+    this.nbService.getResourcesBasic().subscribe({
       error: (err) => {
         if (err.error) {
           this.errorMessage = err.error.message;
@@ -50,32 +50,33 @@ export class CreateRoleComponent implements OnInit, OnDestroy {
           Validators.maxLength(20),
         ])
       ),
-      part: this.formBuilder.control(''),
+      resource: this.formBuilder.control(''),
       selected: this.formBuilder.control(''),
     });
-    this.partSubscription = this.createRoleForm
-      .get('part')
+    this.resourceSubscription = this.createRoleForm
+      .get('resource')
       ?.valueChanges.subscribe({
         next: (value) => {
           this.allowedShowList =
-            this.options.find((o) => o.applicationPartName === value)
+            this.options.find((o) => o.applicationResourceName === value)
               ?.allowed || [];
           this.createRoleForm
             .get('selected')
             ?.setValue(
-              this.allowedObject[this.createRoleForm.get('part')?.value] || []
+              this.allowedObject[this.createRoleForm.get('resource')?.value] ||
+                []
             );
         },
       }) as Subscription;
   }
 
   ngOnDestroy(): void {
-    this.partSubscription?.unsubscribe();
+    this.resourceSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {}
 
-  createRole(roleBody: { identifier: string; part: string | undefined }) {
+  createRole(roleBody: { identifier: string; resource: string | undefined }) {
     this.nbService
       .createRole(roleBody.identifier, this.allowedObject)
       .subscribe({
@@ -95,7 +96,7 @@ export class CreateRoleComponent implements OnInit, OnDestroy {
 
   selectedChange(selected: boolean, value: Option) {
     const currentAllowedObject =
-      this.allowedObject[this.createRoleForm.get('part')?.value];
+      this.allowedObject[this.createRoleForm.get('resource')?.value];
     if (
       value.allowed === '*' &&
       selected &&
@@ -103,13 +104,13 @@ export class CreateRoleComponent implements OnInit, OnDestroy {
         this.allowedShowList.length
     ) {
       this.createRoleForm.get('selected')?.setValue(this.allowedShowList);
-      this.allowedObject[this.createRoleForm.get('part')?.value] = [
+      this.allowedObject[this.createRoleForm.get('resource')?.value] = [
         this.allowedShowList[0],
       ];
     } else if (value.allowed === '*' && !selected) {
       const temporalAllowed = [...this.allowedShowList];
       temporalAllowed.shift();
-      this.allowedObject[this.createRoleForm.get('part')?.value] =
+      this.allowedObject[this.createRoleForm.get('resource')?.value] =
         temporalAllowed;
     } else if (selected) {
       if (!(currentAllowedObject && currentAllowedObject[0].allowed === '*')) {
@@ -119,7 +120,9 @@ export class CreateRoleComponent implements OnInit, OnDestroy {
         ) {
           currentAllowedObject.push(value);
         } else {
-          this.allowedObject[this.createRoleForm.get('part')?.value] = [value];
+          this.allowedObject[this.createRoleForm.get('resource')?.value] = [
+            value,
+          ];
         }
       }
     } else {
@@ -130,7 +133,7 @@ export class CreateRoleComponent implements OnInit, OnDestroy {
         currentAllowedObject.splice(indexOfValue, 1);
       }
       if (currentAllowedObject && currentAllowedObject.length === 0) {
-        delete this.allowedObject[this.createRoleForm.get('part')?.value];
+        delete this.allowedObject[this.createRoleForm.get('resource')?.value];
       }
     }
   }

@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import {
-  Part,
+  Resource,
   Role,
   Option,
   NodebootOauth2StarterService,
@@ -17,13 +17,13 @@ import {
 export class OptionsComponent implements OnInit, OnDestroy {
   optionsForm: FormGroup;
   errorMessage!: string;
-  options: Part[] = [];
+  options: Resource[] = [];
   allowedShowList: Option[] = [];
   allowedObject: Record<string, Option[]> = {};
   originalAllowedObject: Record<string, Option[]> = {};
   objectKeys = Object.keys;
   convertToString = JSON.stringify;
-  partSubscription: Subscription;
+  resourceSubscription: Subscription;
 
   constructor(
     public dialogRef: MatDialogRef<OptionsComponent>,
@@ -31,13 +31,13 @@ export class OptionsComponent implements OnInit, OnDestroy {
     private nbService: NodebootOauth2StarterService,
     private formBuilder: FormBuilder
   ) {
-    for (const option of this.role.parts) {
-      this.allowedObject[option.applicationPartName] = [...option.allowed];
-      this.originalAllowedObject[option.applicationPartName] = [
+    for (const option of this.role.resources) {
+      this.allowedObject[option.applicationResourceName] = [...option.allowed];
+      this.originalAllowedObject[option.applicationResourceName] = [
         ...option.allowed,
       ];
     }
-    this.nbService.getPartsBasic().subscribe({
+    this.nbService.getResourcesBasic().subscribe({
       error: (err) => {
         if (err.error) {
           this.errorMessage = err.error.message;
@@ -51,20 +51,20 @@ export class OptionsComponent implements OnInit, OnDestroy {
       },
     });
     this.optionsForm = this.formBuilder.group({
-      part: this.formBuilder.control(''),
+      resource: this.formBuilder.control(''),
       selected: this.formBuilder.control([]),
     });
-    this.partSubscription = this.optionsForm
-      .get('part')
+    this.resourceSubscription = this.optionsForm
+      .get('resource')
       ?.valueChanges.subscribe({
         next: (value) => {
           this.allowedShowList =
-            this.options.find((o) => o.applicationPartName === value)
+            this.options.find((o) => o.applicationResourceName === value)
               ?.allowed || [];
           this.optionsForm
             .get('selected')
             ?.setValue(
-              this.allowedObject[this.optionsForm.get('part')?.value]?.map(
+              this.allowedObject[this.optionsForm.get('resource')?.value]?.map(
                 (asl) => JSON.stringify(asl)
               ) || []
             );
@@ -75,13 +75,13 @@ export class OptionsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {}
 
   ngOnDestroy(): void {
-    this.partSubscription?.unsubscribe();
+    this.resourceSubscription?.unsubscribe();
   }
 
   selectedChange(selected: boolean, value: string) {
     const parsedValue = JSON.parse(value) as Option;
     const currentAllowedObject =
-      this.allowedObject[this.optionsForm.get('part')?.value];
+      this.allowedObject[this.optionsForm.get('resource')?.value];
     if (
       parsedValue.allowed === '*' &&
       selected &&
@@ -91,13 +91,14 @@ export class OptionsComponent implements OnInit, OnDestroy {
       this.optionsForm
         .get('selected')
         ?.setValue(this.allowedShowList.map((asl) => JSON.stringify(asl)));
-      this.allowedObject[this.optionsForm.get('part')?.value] = [
+      this.allowedObject[this.optionsForm.get('resource')?.value] = [
         this.allowedShowList[0],
       ];
     } else if (parsedValue.allowed === '*' && !selected) {
       const temporalAllowed = [...this.allowedShowList];
       temporalAllowed.shift();
-      this.allowedObject[this.optionsForm.get('part')?.value] = temporalAllowed;
+      this.allowedObject[this.optionsForm.get('resource')?.value] =
+        temporalAllowed;
     } else if (selected) {
       if (!(currentAllowedObject && currentAllowedObject[0].allowed === '*')) {
         if (
@@ -107,7 +108,7 @@ export class OptionsComponent implements OnInit, OnDestroy {
         ) {
           currentAllowedObject.push(parsedValue);
         } else {
-          this.allowedObject[this.optionsForm.get('part')?.value] = [
+          this.allowedObject[this.optionsForm.get('resource')?.value] = [
             parsedValue,
           ];
         }
@@ -120,7 +121,7 @@ export class OptionsComponent implements OnInit, OnDestroy {
         currentAllowedObject.splice(indexOfValue, 1);
       }
       if (currentAllowedObject && currentAllowedObject.length === 0) {
-        delete this.allowedObject[this.optionsForm.get('part')?.value];
+        delete this.allowedObject[this.optionsForm.get('resource')?.value];
       }
     }
   }

@@ -47,6 +47,14 @@ export class CreateUserComponent implements OnInit {
           Validators.pattern(/^[a-zA-Z0-9_\.\-\/\s]+$/),
         ])
       ),
+      description: this.formBuilder.control(
+        '',
+        Validators.compose([
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(255),
+        ])
+      ),
       username: this.formBuilder.control(
         '',
         Validators.compose([

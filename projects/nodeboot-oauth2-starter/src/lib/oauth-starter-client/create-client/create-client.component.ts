@@ -47,6 +47,14 @@ export class CreateClientComponent implements OnInit {
           Validators.pattern(/^[a-zA-Z0-9_\.\-\/\s]+$/),
         ])
       ),
+      description: this.formBuilder.control(
+        '',
+        Validators.compose([
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(255),
+        ])
+      ),
       identifier: this.formBuilder.control(
         '',
         Validators.compose([
@@ -57,6 +65,7 @@ export class CreateClientComponent implements OnInit {
         ])
       ),
       role: this.formBuilder.control(''),
+      longLive: this.formBuilder.control(false),
     });
   }
 
@@ -88,11 +97,14 @@ export class CreateClientComponent implements OnInit {
     name: string;
     identifier: string;
     role: string | undefined;
+    longLive?: boolean;
   }) {
+    const longLive = createClientData.longLive || false;
     createClientData.role = undefined;
+    createClientData.longLive = undefined;
     this.dialogRef.disableClose = true;
     this.nbService
-      .createClient({ ...createClientData, roles: this.rolesList })
+      .createClient({ ...createClientData, roles: this.rolesList }, longLive)
       .subscribe({
         error: (err) => {
           this.dialogRef.disableClose = false;

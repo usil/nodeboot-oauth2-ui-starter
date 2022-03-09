@@ -23,11 +23,14 @@ import { AddClientRolesComponent } from './oauth-starter-client/add-client-roles
 import { ViewClientRolesComponent } from './oauth-starter-client/view-client-roles/view-client-roles.component';
 import { ShowTokenComponent } from './oauth-starter-client/show-token/show-token.component';
 import { CreateClientComponent } from './oauth-starter-client/create-client/create-client.component';
-import { OauthStarterApplicationPartComponent } from './oauth-starter-application-part/oauth-starter-application-part.component';
-import { DeleteApplicationPartComponent } from './oauth-starter-application-part/delete-application-part/delete-application-part.component';
-import { ApplicationOptionsComponent } from './oauth-starter-application-part/application-options/application-options.component';
-import { CreateApplicationPartComponent } from './oauth-starter-application-part/create-application-part/create-application-part.component';
+import { OauthStarterApplicationResourceComponent } from './oauth-starter-application-resource/oauth-starter-application-resource.component';
+import { DeleteApplicationResourceComponent } from './oauth-starter-application-resource/delete-application-resource/delete-application-resource.component';
+import { ApplicationOptionsComponent } from './oauth-starter-application-resource/application-options/application-options.component';
+import { CreateApplicationResourceComponent } from './oauth-starter-application-resource/create-application-resource/create-application-resource.component';
 import { ChangePasswordComponent } from './oauth-starter-user-profile/change-password/change-password.component';
+import { ShowNewTokenComponent } from './oauth-starter-client/show-new-token/show-new-token.component';
+import { ShowSecretComponent } from './oauth-starter-client/show-secret/show-secret.component';
+import { RevokeTokenComponent } from './oauth-starter-client/revoke-token/revoke-token.component';
 
 @NgModule({
   declarations: [
@@ -51,10 +54,13 @@ import { ChangePasswordComponent } from './oauth-starter-user-profile/change-pas
     ShowTokenComponent,
     CreateClientComponent,
     ChangePasswordComponent,
-    OauthStarterApplicationPartComponent,
-    DeleteApplicationPartComponent,
+    OauthStarterApplicationResourceComponent,
+    DeleteApplicationResourceComponent,
     ApplicationOptionsComponent,
-    CreateApplicationPartComponent,
+    CreateApplicationResourceComponent,
+    ShowNewTokenComponent,
+    ShowSecretComponent,
+    RevokeTokenComponent,
   ],
   imports: [
     LibraryMaterials,
@@ -70,7 +76,7 @@ import { ChangePasswordComponent } from './oauth-starter-user-profile/change-pas
     OauthStarterUserProfileComponent,
     OauthStarterRolesComponent,
     OauthStarterClientComponent,
-    OauthStarterApplicationPartComponent,
+    OauthStarterApplicationResourceComponent,
   ],
 })
 export class NodebootOauth2StarterModule {}
