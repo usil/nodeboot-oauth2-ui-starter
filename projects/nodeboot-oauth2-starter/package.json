@@ -1,6 +1,6 @@
 {
   "name": "nodeboot-oauth2-starter-ui",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "peerDependencies": {
     "@angular/material": "^13.0.0",
     "@angular/animations": "~13.0.0",
