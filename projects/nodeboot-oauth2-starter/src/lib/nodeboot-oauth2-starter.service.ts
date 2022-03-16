@@ -97,9 +97,9 @@ export class NodebootOauth2StarterService {
     originalAllowedObject: Record<string, Option[]>
   ) {
     return this.http
-      .put(this.authRoleApi + `/${roleId}/option`, {
-        newAllowedObject,
-        originalAllowedObject,
+      .put(this.authRoleApi + `/${roleId}/permission`, {
+        newAllowedObject: newAllowedObject,
+        originalAllowedObject: originalAllowedObject,
       })
       .pipe(first());
   }
@@ -141,9 +141,9 @@ export class NodebootOauth2StarterService {
     originalResourceOptions: Option[]
   ) {
     return this.http
-      .put(this.authResourceApi + `/${resourceId}/option`, {
-        newResourceOptions,
-        originalResourceOptions,
+      .put(this.authResourceApi + `/${resourceId}/permission`, {
+        newResourcePermissions: newResourceOptions,
+        originalResourcePermissions: originalResourceOptions,
       })
       .pipe(first());
   }
