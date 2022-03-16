@@ -1,0 +1,49 @@
+<h2 mat-dialog-title>Create Application Part</h2>
+<form
+  [formGroup]="createPartForm"
+  (ngSubmit)="createPart(createPartForm.value)"
+>
+  <div mat-dialog-content>
+    <div class="error-display" *ngIf="errorMessage">
+      <h5>{{ errorMessage }}</h5>
+    </div>
+    <mat-form-field class="forms-field" appearance="fill">
+      <mat-label>Identifier</mat-label>
+      <input
+        matInput
+        formControlName="partIdentifier"
+        name="partIdentifier"
+        required
+      />
+      <mat-hint>The part name</mat-hint>
+    </mat-form-field>
+    <mat-form-field class="forms-field" appearance="fill">
+      <mat-label>Select A Application</mat-label>
+      <mat-select name="application" formControlName="application">
+        <mat-option
+          [value]="application.id"
+          *ngFor="let application of applications"
+          >{{ application.identifier }}</mat-option
+        >
+      </mat-select>
+      <mat-hint>Select an application</mat-hint>
+    </mat-form-field>
+  </div>
+  <div align="end" mat-dialog-actions>
+    <button
+      (click)="closeDialog()"
+      type="button"
+      color="warn"
+      mat-stroked-button
+      [disabled]="dialogRef.disableClose"
+    >
+      Cancel</button
+    ><button
+      [disabled]="!createPartForm.valid || loadingResult"
+      color="primary"
+      mat-flat-button
+    >
+      Create
+    </button>
+  </div>
+</form>
