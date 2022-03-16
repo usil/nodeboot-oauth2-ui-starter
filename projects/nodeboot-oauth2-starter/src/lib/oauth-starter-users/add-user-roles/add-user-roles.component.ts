@@ -68,7 +68,6 @@ export class AddUserRolesComponent implements OnInit {
     const roleValue = role;
     const indexOfRole = this.roles.indexOf(roleValue);
     this.rolesList.splice(indexOfRole, 1);
-    this.roles.push(roleValue);
   }
 
   closeDialog() {
@@ -76,30 +75,23 @@ export class AddUserRolesComponent implements OnInit {
   }
 
   updateRoles() {
-    const rolesListToSend = this.rolesList.flatMap((rl) => {
-      const roleExist = this.user.roles.findIndex(
-        (r) => rl.id == r.id
-      ) as number;
-      if (roleExist === -1) {
-        return rl;
-      }
-      return [];
+    const basicOriginalRoles = this.user.roles.map((rl) => {
+      return { id: rl.id, identifier: rl.identifier };
     });
-    if (rolesListToSend.length === 0) {
-      return this.dialogRef.close(false);
-    }
-    this.nbService.updateUserRoles(this.user.id, rolesListToSend).subscribe({
-      error: (err) => {
-        if (err.error) {
-          this.errorMessage = err.error.message;
-        } else {
-          this.errorMessage = 'Unknown Error';
-        }
-        this.roles = [];
-      },
-      next: () => {
-        this.dialogRef.close(true);
-      },
-    });
+    this.nbService
+      .updateUserRoles(this.user.subjectId, this.rolesList, basicOriginalRoles)
+      .subscribe({
+        error: (err) => {
+          if (err.error) {
+            this.errorMessage = err.error.message;
+          } else {
+            this.errorMessage = 'Unknown Error';
+          }
+          this.roles = [];
+        },
+        next: () => {
+          this.dialogRef.close(true);
+        },
+      });
   }
 }
