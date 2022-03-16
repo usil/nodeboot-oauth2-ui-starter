@@ -128,6 +128,7 @@ export class OauthStarterClientComponent implements OnInit {
           }
         },
         next: (res) => {
+          this.reload.next(this.reload.value + 1);
           this.dialog.open(ShowNewTokenComponent, {
             width: '600px',
             maxHeight: '70vh',

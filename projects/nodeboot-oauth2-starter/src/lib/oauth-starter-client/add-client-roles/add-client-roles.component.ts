@@ -67,7 +67,6 @@ export class AddClientRolesComponent implements OnInit {
     const roleValue = role;
     const indexOfRole = this.roles.indexOf(roleValue);
     this.rolesList.splice(indexOfRole, 1);
-    this.roles.push(roleValue);
   }
 
   closeDialog() {
