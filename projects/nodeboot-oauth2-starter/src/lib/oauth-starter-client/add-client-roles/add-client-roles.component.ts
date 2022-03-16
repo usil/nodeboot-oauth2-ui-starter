@@ -51,7 +51,6 @@ export class AddClientRolesComponent implements OnInit {
   }
 
   ngOnInit(): void {}
-
   addRoleToList() {
     const roleValue = this.addRolesForm.get('role')?.value;
     if (!roleValue) {
