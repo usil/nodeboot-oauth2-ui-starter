@@ -20,6 +20,8 @@ export class CreateRoleComponent implements OnInit, OnDestroy {
   allowedShowList: Option[] = [];
   allowedObject: Record<string, Option[]> = {};
   objectKeys = Object.keys;
+
+  selectedSubscription: Subscription;
   resourceSubscription: Subscription;
 
   constructor(
@@ -56,22 +58,87 @@ export class CreateRoleComponent implements OnInit, OnDestroy {
     this.resourceSubscription = this.createRoleForm
       .get('resource')
       ?.valueChanges.subscribe({
-        next: (value) => {
+        next: (value: string) => {
           this.allowedShowList =
             this.options.find((o) => o.applicationResourceName === value)
               ?.allowed || [];
           this.createRoleForm
             .get('selected')
-            ?.setValue(
-              this.allowedObject[this.createRoleForm.get('resource')?.value] ||
-                []
-            );
+            ?.setValue(this.allowedObject[value] || []);
         },
+      }) as Subscription;
+
+    this.selectedSubscription = this.createRoleForm
+      .get('selected')
+      ?.valueChanges.subscribe((valueChange: Option[]) => {
+        const currentAllowedObject =
+          this.allowedObject[this.createRoleForm.get('resource')?.value] || [];
+
+        if (valueChange.length === 0 && currentAllowedObject.length === 0)
+          return;
+
+        let newOptionEntry: Option;
+
+        if (currentAllowedObject.length === 0) {
+          newOptionEntry = valueChange[0];
+          this.selectedChange(true, newOptionEntry);
+          return;
+        }
+
+        if (valueChange.length === 0) {
+          newOptionEntry = currentAllowedObject[0];
+          this.selectedChange(false, newOptionEntry);
+          return;
+        }
+
+        if (
+          currentAllowedObject[0].allowed === '*' &&
+          valueChange[0].allowed !== '*'
+        ) {
+          newOptionEntry = currentAllowedObject[0];
+          this.selectedChange(false, newOptionEntry);
+          return;
+        }
+
+        if (valueChange[0].allowed === '*') {
+          newOptionEntry = valueChange[0];
+          this.selectedChange(true, newOptionEntry);
+          return;
+        }
+
+        if (currentAllowedObject.length > valueChange.length) {
+          for (const allowed of currentAllowedObject) {
+            const indexOfAllowed = valueChange.findIndex(
+              (v) => v.id === allowed.id
+            );
+
+            if (indexOfAllowed === -1) {
+              newOptionEntry = allowed;
+              this.selectedChange(false, newOptionEntry);
+              break;
+            }
+          }
+
+          return;
+        }
+
+        for (const value of valueChange) {
+          const indexOfAllowed = currentAllowedObject.findIndex(
+            (c) => c.id === value.id
+          );
+
+          if (indexOfAllowed === -1) {
+            newOptionEntry = value;
+            this.selectedChange(true, newOptionEntry);
+            break;
+          }
+        }
       }) as Subscription;
   }
 
   ngOnDestroy(): void {
     this.resourceSubscription?.unsubscribe();
+    this.selectedSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {}
@@ -95,8 +162,8 @@ export class CreateRoleComponent implements OnInit, OnDestroy {
   }
 
   selectedChange(selected: boolean, value: Option) {
-    const currentAllowedObject =
-      this.allowedObject[this.createRoleForm.get('resource')?.value];
+    // const currentAllowedObject =
+    //   this.allowedObject[this.createRoleForm.get('resource')?.value];
     if (
       value.allowed === '*' &&
       selected &&
@@ -113,27 +180,14 @@ export class CreateRoleComponent implements OnInit, OnDestroy {
       this.allowedObject[this.createRoleForm.get('resource')?.value] =
         temporalAllowed;
     } else if (selected) {
-      if (!(currentAllowedObject && currentAllowedObject[0].allowed === '*')) {
-        if (
-          currentAllowedObject &&
-          currentAllowedObject.findIndex((ca) => ca.id === value.id)
-        ) {
-          currentAllowedObject.push(value);
-        } else {
-          this.allowedObject[this.createRoleForm.get('resource')?.value] = [
-            value,
-          ];
-        }
-      }
+      this.allowedObject[this.createRoleForm.get('resource')?.value] =
+        this.createRoleForm.get('selected')?.value;
     } else {
-      const indexOfValue = this.createRoleForm
-        .get('selected')
-        ?.value.indexOf(value);
-      if (currentAllowedObject && indexOfValue !== -1) {
-        currentAllowedObject.splice(indexOfValue, 1);
-      }
-      if (currentAllowedObject && currentAllowedObject.length === 0) {
+      if (this.createRoleForm.get('selected')?.value.length === 0) {
         delete this.allowedObject[this.createRoleForm.get('resource')?.value];
+      } else {
+        this.allowedObject[this.createRoleForm.get('resource')?.value] =
+          this.createRoleForm.get('selected')?.value;
       }
     }
   }
