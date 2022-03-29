@@ -84,7 +84,8 @@ export class CreateClientComponent implements OnInit {
 
   removeRoleToList(role: BasicRole) {
     const roleValue = role;
-    const indexOfRole = this.roles.indexOf(roleValue);
+    const indexOfRole = this.rolesList.indexOf(roleValue);
+    this.roles.unshift(role);
     this.rolesList.splice(indexOfRole, 1);
   }
 

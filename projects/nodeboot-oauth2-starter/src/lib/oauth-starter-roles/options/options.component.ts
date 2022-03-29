@@ -23,6 +23,8 @@ export class OptionsComponent implements OnInit, OnDestroy {
   originalAllowedObject: Record<string, Option[]> = {};
   objectKeys = Object.keys;
   convertToString = JSON.stringify;
+
+  selectedSubscription: Subscription;
   resourceSubscription: Subscription;
 
   constructor(
@@ -37,6 +39,7 @@ export class OptionsComponent implements OnInit, OnDestroy {
         ...option.allowed,
       ];
     }
+
     this.nbService.getResourcesBasic().subscribe({
       error: (err) => {
         if (err.error) {
@@ -61,6 +64,7 @@ export class OptionsComponent implements OnInit, OnDestroy {
           this.allowedShowList =
             this.options.find((o) => o.applicationResourceName === value)
               ?.allowed || [];
+
           this.optionsForm
             .get('selected')
             ?.setValue(
@@ -70,58 +74,117 @@ export class OptionsComponent implements OnInit, OnDestroy {
             );
         },
       }) as Subscription;
+
+    this.selectedSubscription = this.optionsForm
+      .get('selected')
+      ?.valueChanges.subscribe((valueChange: string[]) => {
+        const currentAllowedObject =
+          this.allowedObject[this.optionsForm.get('resource')?.value] || [];
+
+        if (valueChange.length === 0 && currentAllowedObject.length === 0)
+          return;
+
+        let newOptionEntry: Option;
+
+        if (currentAllowedObject.length === 0) {
+          newOptionEntry = JSON.parse(valueChange[0]);
+          this.selectedChange(true, newOptionEntry);
+          return;
+        }
+
+        if (valueChange.length === 0) {
+          newOptionEntry = currentAllowedObject[0];
+          this.selectedChange(false, newOptionEntry);
+          return;
+        }
+
+        if (
+          currentAllowedObject[0].allowed === '*' &&
+          JSON.parse(valueChange[0]).allowed !== '*'
+        ) {
+          newOptionEntry = currentAllowedObject[0];
+          this.selectedChange(false, newOptionEntry);
+          return;
+        }
+
+        if (JSON.parse(valueChange[0]).allowed === '*') {
+          newOptionEntry = JSON.parse(valueChange[0]);
+          this.selectedChange(true, newOptionEntry);
+          return;
+        }
+
+        if (currentAllowedObject.length > valueChange.length) {
+          for (const allowed of currentAllowedObject) {
+            const indexOfAllowed = valueChange.findIndex(
+              (v) => JSON.parse(v).id === allowed.id
+            );
+
+            if (indexOfAllowed === -1) {
+              newOptionEntry = allowed;
+              this.selectedChange(false, newOptionEntry);
+              break;
+            }
+          }
+
+          return;
+        }
+
+        for (const value of valueChange) {
+          const indexOfAllowed = currentAllowedObject.findIndex(
+            (c) => c.id === JSON.parse(value).id
+          );
+
+          if (indexOfAllowed === -1) {
+            newOptionEntry = JSON.parse(value);
+            this.selectedChange(true, newOptionEntry);
+            break;
+          }
+        }
+      }) as Subscription;
   }
 
   ngOnInit(): void {}
 
   ngOnDestroy(): void {
     this.resourceSubscription?.unsubscribe();
+    this.selectedSubscription?.unsubscribe();
   }
 
-  selectedChange(selected: boolean, value: string) {
-    const parsedValue = JSON.parse(value) as Option;
-    const currentAllowedObject =
-      this.allowedObject[this.optionsForm.get('resource')?.value];
+  selectedChange(selected: boolean, value: Option) {
     if (
-      parsedValue.allowed === '*' &&
+      value.allowed === '*' &&
       selected &&
       this.optionsForm.get('selected')?.value.length !==
         this.allowedShowList.length
     ) {
       this.optionsForm
         .get('selected')
-        ?.setValue(this.allowedShowList.map((asl) => JSON.stringify(asl)));
+        ?.setValue(
+          this.allowedShowList.map((aso) => JSON.stringify(aso)) || []
+        );
       this.allowedObject[this.optionsForm.get('resource')?.value] = [
         this.allowedShowList[0],
       ];
-    } else if (parsedValue.allowed === '*' && !selected) {
+    } else if (value.allowed === '*' && !selected) {
       const temporalAllowed = [...this.allowedShowList];
       temporalAllowed.shift();
       this.allowedObject[this.optionsForm.get('resource')?.value] =
         temporalAllowed;
     } else if (selected) {
-      if (!(currentAllowedObject && currentAllowedObject[0].allowed === '*')) {
-        if (
-          currentAllowedObject &&
-          currentAllowedObject.findIndex((ca) => ca.id === parsedValue.id) ===
-            -1
-        ) {
-          currentAllowedObject.push(parsedValue);
-        } else {
-          this.allowedObject[this.optionsForm.get('resource')?.value] = [
-            parsedValue,
-          ];
-        }
-      }
+      this.allowedObject[this.optionsForm.get('resource')?.value] = (
+        this.optionsForm.get('selected')?.value as string[]
+      ).map((stringObj) => {
+        return JSON.parse(stringObj);
+      });
     } else {
-      const indexOfValue = this.optionsForm
-        .get('selected')
-        ?.value.indexOf(parsedValue);
-      if (currentAllowedObject && indexOfValue !== -1) {
-        currentAllowedObject.splice(indexOfValue, 1);
-      }
-      if (currentAllowedObject && currentAllowedObject.length === 0) {
+      if (this.optionsForm.get('selected')?.value.length === 0) {
         delete this.allowedObject[this.optionsForm.get('resource')?.value];
+      } else {
+        this.allowedObject[this.optionsForm.get('resource')?.value] = (
+          this.optionsForm.get('selected')?.value as string[]
+        ).map((stringObj) => {
+          return JSON.parse(stringObj);
+        });
       }
     }
   }

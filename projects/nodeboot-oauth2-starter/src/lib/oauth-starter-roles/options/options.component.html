@@ -17,7 +17,6 @@
     </mat-form-field>
     <mat-selection-list #allowed formControlName="selected">
       <mat-list-option
-        (selectedChange)="selectedChange($event, convertToString(allowedL))"
         [value]="convertToString(allowedL)"
         [disabled]="
           allowedL.allowed !== '*' &&
