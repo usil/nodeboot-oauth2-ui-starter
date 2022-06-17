@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import {
   BasicRole,
@@ -12,7 +12,7 @@ import {
   styleUrls: ['./create-client.component.scss'],
 })
 export class CreateClientComponent implements OnInit {
-  createClientForm: FormGroup;
+  createClientForm: UntypedFormGroup;
   errorMessage!: string;
   errorMessageRoles!: string;
   roles: BasicRole[] = [];
@@ -21,7 +21,7 @@ export class CreateClientComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<CreateClientComponent>,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private nbService: NodebootOauth2StarterService
   ) {
     this.nbService.getRolesBasic().subscribe({

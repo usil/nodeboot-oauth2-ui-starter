@@ -3,7 +3,7 @@ import {
   NodebootOauth2StarterService,
 } from '../../nodeboot-oauth2-starter.service';
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -12,7 +12,7 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./create-application-resource.component.scss'],
 })
 export class CreateApplicationResourceComponent implements OnInit {
-  createResourceForm: FormGroup;
+  createResourceForm: UntypedFormGroup;
   errorMessage!: string;
   errorMessageRoles!: string;
   applications: Application[] = [];
@@ -22,7 +22,7 @@ export class CreateApplicationResourceComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<CreateApplicationResourceComponent>,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private nbService: NodebootOauth2StarterService
   ) {
     this.nbService.getApplications().subscribe({

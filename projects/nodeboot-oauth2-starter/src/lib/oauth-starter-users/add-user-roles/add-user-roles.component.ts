@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
   BasicRole,
@@ -13,7 +13,7 @@ import {
   styleUrls: ['./add-user-roles.component.scss'],
 })
 export class AddUserRolesComponent implements OnInit {
-  addRolesForm: FormGroup;
+  addRolesForm: UntypedFormGroup;
   errorMessage!: string;
   errorMessageRoles!: string;
   roles: BasicRole[] = [];
@@ -21,7 +21,7 @@ export class AddUserRolesComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<AddUserRolesComponent>,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private nbService: NodebootOauth2StarterService,
     @Inject(MAT_DIALOG_DATA) public user: User
   ) {

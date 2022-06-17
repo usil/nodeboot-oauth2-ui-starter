@@ -1,6 +1,6 @@
 import { NodebootOauth2StarterService } from './../../nodeboot-oauth2-starter.service';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BasicRole, Client } from '../../nodeboot-oauth2-starter.service';
 
@@ -10,7 +10,7 @@ import { BasicRole, Client } from '../../nodeboot-oauth2-starter.service';
   styleUrls: ['./add-client-roles.component.scss'],
 })
 export class AddClientRolesComponent implements OnInit {
-  addRolesForm: FormGroup;
+  addRolesForm: UntypedFormGroup;
   errorMessage!: string;
   errorMessageRoles!: string;
   roles: BasicRole[] = [];
@@ -18,7 +18,7 @@ export class AddClientRolesComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<AddClientRolesComponent>,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private nbService: NodebootOauth2StarterService,
     @Inject(MAT_DIALOG_DATA) public client: Client
   ) {

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import {
@@ -14,7 +14,7 @@ import {
   styleUrls: ['./create-role.component.scss'],
 })
 export class CreateRoleComponent implements OnInit, OnDestroy {
-  createRoleForm: FormGroup;
+  createRoleForm: UntypedFormGroup;
   errorMessage!: string;
   options: Resource[] = [];
   allowedShowList: Option[] = [];
@@ -25,7 +25,7 @@ export class CreateRoleComponent implements OnInit, OnDestroy {
   resourceSubscription: Subscription;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private nbService: NodebootOauth2StarterService,
     public dialogRef: MatDialogRef<CreateRoleComponent>
   ) {

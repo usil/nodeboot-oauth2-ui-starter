@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
   NodebootOauth2StarterService,
@@ -13,7 +13,7 @@ import {
   styleUrls: ['./application-options.component.scss'],
 })
 export class ApplicationOptionsComponent implements OnInit {
-  addResourceOptionForm: FormGroup;
+  addResourceOptionForm: UntypedFormGroup;
   errorMessage!: string;
   errorMessageRoles!: string;
   options: Option[] = [];
@@ -22,7 +22,7 @@ export class ApplicationOptionsComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<ApplicationOptionsComponent>,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private nbService: NodebootOauth2StarterService,
     @Inject(MAT_DIALOG_DATA) public resource: Resource
   ) {

@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
   NodebootOauth2StarterService,
@@ -14,10 +14,10 @@ import {
 })
 export class UpdateUserComponent implements OnInit {
   errorMessage!: string;
-  updateUserForm: FormGroup;
+  updateUserForm: UntypedFormGroup;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     public dialogRef: MatDialogRef<UpdateUserComponent>,
     private nbService: NodebootOauth2StarterService,
     @Inject(MAT_DIALOG_DATA) public user: User

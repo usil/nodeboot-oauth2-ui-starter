@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import {
@@ -15,7 +15,7 @@ import {
   styleUrls: ['./options.component.scss'],
 })
 export class OptionsComponent implements OnInit, OnDestroy {
-  optionsForm: FormGroup;
+  optionsForm: UntypedFormGroup;
   errorMessage!: string;
   options: Resource[] = [];
   allowedShowList: Option[] = [];
@@ -31,7 +31,7 @@ export class OptionsComponent implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef<OptionsComponent>,
     @Inject(MAT_DIALOG_DATA) public role: Role,
     private nbService: NodebootOauth2StarterService,
-    private formBuilder: FormBuilder
+    private formBuilder: UntypedFormBuilder
   ) {
     for (const option of this.role.resources) {
       this.allowedObject[option.applicationResourceName] = [...option.allowed];

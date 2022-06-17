@@ -37,6 +37,5 @@
         }
       }
     }
-  },
-  "defaultProject": "nodeboot-oauth2-starter"
+  }
 }
